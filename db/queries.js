@@ -32,11 +32,31 @@ async function resetUsedWords() {
     await pool.query("DELETE FROM used_words;");
 };
 
+async function createWordleSession() {
+    const {rows} = await pool.query("INSERT INTO wordle_games DEFAULT VALUES RETURNING *;");
+    let session = null;
+    if (rows.length !== 0) {
+        session = rows[0];
+    }
+    return session;
+};
+
+async function getWordleSession(sessionId) {
+    const {rows} = await pool.query("SELECT * FROM wordle_games WHERE id = $1", [sessionId]);
+    let session = null;
+    if (rows.length !== 0) {
+        session = rows[0];
+    }
+    return session;
+};
+
 
 
 module.exports = {
     getUsedWords,
     getLastUsedWord,
     insertUsedWord,
-    resetUsedWords
+    resetUsedWords,
+    createWordleSession,
+    getWordleSession
 };
