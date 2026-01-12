@@ -1,6 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const utilRoute = require("./routes/utilRoute.js");
+const wordleRoute = require("./routes/wordleRoute.js");
 
 
 
@@ -13,6 +14,7 @@ app.get("/", function(req, res) {
 });
 
 app.use("/util", utilRoute);
+app.use("/wordle", wordleRoute);
 
 
 
