@@ -9,6 +9,7 @@ const wordleRoute = Router();
 
 wordleRoute.get("/guesses", deleteOldWordleSessions, getWordleSession, wordleController.getPastWordleGuessesGet);
 wordleRoute.get("/guess/:word", getWordleSession, wordleController.wordGuessGet);
+wordleRoute.get("/todays-word", deleteOldWordleSessions, getWordleSession, wordleController.getWordOfTheDayGet);
 
 
 
