@@ -1,3 +1,4 @@
+const {DateTime} = require("luxon");
 const asyncHandler = require("express-async-handler");
 const db = require("../db/queries.js");
 
@@ -29,6 +30,16 @@ const getWordleSession = asyncHandler(async function(req, res, next) {
 
 
 
+const deleteOldWordleSessions = asyncHandler(async function(req, res, next) {
+    let currentDay = DateTime.local().setZone(process.env.TIMEZONE).startOf("day");
+    currentDay = currentDay.toISO();
+    await db.deleteOldWordleGames(currentDay);
+    next();
+});
+
+
+
 module.exports = {
-    getWordleSession
+    getWordleSession,
+    deleteOldWordleSessions
 };
