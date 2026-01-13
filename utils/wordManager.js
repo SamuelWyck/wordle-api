@@ -27,7 +27,7 @@ class WordManager {
         return wordInfo.word;
     };
 
-    async scoreWord(word, wordOfTheDay) {
+    scoreWord(word, wordOfTheDay) {
         const result = {};
         for (let idx = 0; idx < word.length; idx += 1) {
             let charScore = 0;
