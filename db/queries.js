@@ -50,6 +50,18 @@ async function getWordleSession(sessionId) {
     return session;
 };
 
+async function updateWordleSessionGuesses(sessionId, remainingGuesses) {
+    const {rows} = await pool.query(
+        "UPDATE wordle_games SET remaining_guesses = $1 WHERE id = $2 RETURNING *;", 
+        [remainingGuesses, sessionId]
+    );
+    let session = null;
+    if (rows.length !== 0) {
+        session = rows[0];
+    }
+    return session;
+};
+
 
 
 module.exports = {
@@ -58,5 +70,6 @@ module.exports = {
     insertUsedWord,
     resetUsedWords,
     createWordleSession,
-    getWordleSession
+    getWordleSession,
+    updateWordleSessionGuesses
 };
