@@ -50,7 +50,7 @@ async function getWordleSession(sessionId) {
     return session;
 };
 
-async function updateWordleSessionGuesses(sessionId, remainingGuesses) {
+async function updateWordleSessionRemainingGuesses(sessionId, remainingGuesses) {
     const {rows} = await pool.query(
         "UPDATE wordle_games SET remaining_guesses = $1 WHERE id = $2 RETURNING *;", 
         [remainingGuesses, sessionId]
@@ -62,6 +62,21 @@ async function updateWordleSessionGuesses(sessionId, remainingGuesses) {
     return session;
 };
 
+async function getWordleSessionGuesses(sessionId) {
+    const {rows} = await pool.query(
+        "SELECT word FROM wordle_game_guesses WHERE game_id = $1 ORDER BY timestamp ASC;",
+        [sessionId]
+    );
+    return rows;
+};
+
+async function insertWordleGuess(sessionId, word) {
+    await pool.query(
+        "INSERT INTO wordle_game_guesses (game_id, word) VALUES ($1, $2);",
+        [sessionId, word]
+    );
+};
+
 
 
 module.exports = {
@@ -71,5 +86,7 @@ module.exports = {
     resetUsedWords,
     createWordleSession,
     getWordleSession,
-    updateWordleSessionGuesses
+    updateWordleSessionRemainingGuesses,
+    getWordleSessionGuesses,
+    insertWordleGuess
 };
