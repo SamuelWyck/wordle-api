@@ -22,13 +22,14 @@ const wordGuessGet = asyncHandler(async function(req, res) {
     }
 
     const updatedGuesses = req.wordleSession.remaining_guesses - 1;
+    const sessionId = req.wordleSession.id;
     let score = null;
     try {
-        let [wordScore, _] = await Promise.all([
+        [score] = await Promise.all([
             wordManager.testGuess(word),
-            db.updateWordleSessionGuesses(req.wordleSession.id, updatedGuesses)
+            db.updateWordleSessionRemainingGuesses(sessionId, updatedGuesses),
+            db.insertWordleGuess(sessionId, word)
         ]);
-        score = wordScore;
     } catch {
         return res.status(500).json({errors: [{msg: "Server error"}]});
     }
@@ -38,9 +39,34 @@ const wordGuessGet = asyncHandler(async function(req, res) {
 
 
 
+const getPastWordleGuessesGet = asyncHandler(async function(req, res) {
+    const sessionId = req.wordleSession.id;
+    let wordOfTheDay = null;
+    let sessionGuesses = null;
+    try {
+        [wordOfTheDay, sessionGuesses] = await Promise.all([
+            wordManager.getWordOfTheDay(),
+            db.getWordleSessionGuesses(sessionId)
+        ]);
+    } catch  {
+        return res.status(500).json({errors: [{msg: "Server error"}]});
+    }
+
+    const guessScores = [];
+    for (let guess of sessionGuesses) {
+        const guessScore = wordManager.scoreWord(guess.word, wordOfTheDay);
+        guessScores.push(guessScore);
+    }
+
+    return res.json({guessScores});
+});
+
+
+
 module.exports = {
     wordGuessGet: [
         wordleWordGuessVal,
         wordGuessGet
-    ]
+    ],
+    getPastWordleGuessesGet
 };
