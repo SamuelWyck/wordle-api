@@ -8,6 +8,7 @@ const wordleRoute = Router();
 
 
 wordleRoute.get("/guess/:word", getWordleSession, wordleController.wordGuessGet);
+wordleRoute.get("/guesses", getWordleSession, wordleController.getPastWordleGuessesGet);
 
 
 
