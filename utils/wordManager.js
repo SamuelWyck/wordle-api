@@ -13,7 +13,21 @@ class WordManager {
     
     async testGuess(word) {
         const wordOfTheDay = await this.getWordOfTheDay();
+        return this.scoreWord(word, wordOfTheDay);
+    };
+    
+    async getWordOfTheDay() {
+        const wordInfo = await db.getLastUsedWord();
+        if (wordInfo === null) {
+            return this.#chooseWordOfTheDay();
+        }
+        if (!this.#isTodaysWord(wordInfo)) {
+            return this.#chooseWordOfTheDay();
+        }
+        return wordInfo.word;
+    };
 
+    async scoreWord(word, wordOfTheDay) {
         const result = {};
         for (let idx = 0; idx < word.length; idx += 1) {
             let charScore = 0;
@@ -28,19 +42,7 @@ class WordManager {
             
             result[idx] = {char, charScore};
         }
-        
         return result;
-    };
-    
-    async getWordOfTheDay() {
-        const wordInfo = await db.getLastUsedWord();
-        if (wordInfo === null) {
-            return this.#chooseWordOfTheDay();
-        }
-        if (!this.#isTodaysWord(wordInfo)) {
-            return this.#chooseWordOfTheDay();
-        }
-        return wordInfo.word;
     };
 
     async #chooseWordOfTheDay() {
