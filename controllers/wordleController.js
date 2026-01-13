@@ -63,10 +63,22 @@ const getPastWordleGuessesGet = asyncHandler(async function(req, res) {
 
 
 
+const getWordOfTheDayGet = asyncHandler(async function(req, res) {
+    if (req.wordleSession.remaining_guesses > 0) {
+        return res.status(403).json({errors: [{msg: "Game still in progress"}]});
+    }
+
+    const wordOfTheDay = await wordManager.getWordOfTheDay();
+    return res.json({wordOfTheDay});
+});
+
+
+
 module.exports = {
     wordGuessGet: [
         wordleWordGuessVal,
         wordGuessGet
     ],
-    getPastWordleGuessesGet
+    getPastWordleGuessesGet,
+    getWordOfTheDayGet
 };
