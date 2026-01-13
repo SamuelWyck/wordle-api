@@ -17,7 +17,13 @@ const wordGuessGet = asyncHandler(async function(req, res) {
         return res.status(404).json({errors: [{msg: "Not a real English word."}]});
     }
 
-    const score = await wordManager.testGuess(word);
+    let score = null;
+    try {
+        score = await wordManager.testGuess(word);
+    } catch {
+        return res.status(500).json({errors: [{msg: "Server error"}]});
+    }
+
     return res.json({score});
 });
 
