@@ -77,6 +77,13 @@ async function insertWordleGuess(sessionId, word) {
     );
 };
 
+async function deleteOldWordleGames(currentDate) {
+    await pool.query(
+        "DELETE FROM wordle_games WHERE timestamp < $1;",
+        [currentDate]
+    );
+};
+
 
 
 module.exports = {
@@ -88,5 +95,6 @@ module.exports = {
     getWordleSession,
     updateWordleSessionRemainingGuesses,
     getWordleSessionGuesses,
-    insertWordleGuess
+    insertWordleGuess,
+    deleteOldWordleGames
 };
