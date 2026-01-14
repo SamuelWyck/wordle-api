@@ -28,20 +28,46 @@ class WordManager {
     };
 
     scoreWord(word, wordOfTheDay) {
-        const result = {};
-        for (let idx = 0; idx < word.length; idx += 1) {
-            let charScore = 0;
+        const foundPlaceScore = 2;
+        const foundLetterScore = 1;
+        const notFoundScore = 0;
 
+        const letterCount = {};
+        for (let char of wordOfTheDay) {
+            if (!(char in letterCount)) {
+                letterCount[char] = 0;
+            }
+            letterCount[char] += 1;
+        }
+
+        const result = {};
+
+        for (let idx = 0; idx < word.length; idx += 1) {
             const char = word.at(idx);
-            if (wordOfTheDay.includes(char)) {
-                charScore += 1;
+            if (!(char in letterCount) || letterCount[char] === 0) {
+                continue;
             }
+
             if (wordOfTheDay.at(idx) === char) {
-                charScore += 1;
+                result[idx] = {char, charScore: foundPlaceScore};
+                letterCount[char] -= 1;
             }
-            
+        }
+        for (let idx = 0; idx <word.length; idx += 1) {
+            if (idx in result) {
+                continue;
+            }
+            const char = word.at(idx);
+            if (!(char in letterCount)) {
+                result[idx] = {char, charScore: notFoundScore};
+                continue;
+            }
+
+            const charScore = (letterCount[char] <= 0) ? notFoundScore : foundLetterScore;
+            letterCount[char] -= 1;
             result[idx] = {char, charScore};
         }
+
         return result;
     };
 
