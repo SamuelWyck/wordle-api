@@ -26,7 +26,7 @@ const getWordleSession = asyncHandler(async function(req, res, next) {
     }
     
     req.wordleSession = session;
-    res.set("set-wordle-session-id", sessionId);
+    res.set(process.env.SET_WORDLE_SESSION_HEADER, sessionId);
     next();
 });
 
@@ -41,7 +41,7 @@ const deleteOldWordleSessions = asyncHandler(async function(req, res, next) {
     } catch (error) {
         console.log(error);
     }
-    
+
     next();
 });
 

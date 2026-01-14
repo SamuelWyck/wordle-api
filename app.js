@@ -8,7 +8,9 @@ const wordleRoute = require("./routes/wordleRoute.js");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    exposedHeaders: process.env.SET_WORDLE_SESSION_HEADER
+}));
 
 app.get("/", function(req, res) {
     return res.json({msg: "hi"});
