@@ -30,7 +30,8 @@ const wordGuessGet = asyncHandler(async function(req, res) {
             db.updateWordleSessionRemainingGuesses(sessionId, updatedGuesses),
             db.insertWordleGuess(sessionId, word)
         ]);
-    } catch {
+    } catch (error) {
+        console.log(error);
         return res.status(500).json({errors: [{msg: "Server error"}]});
     }
 
@@ -48,7 +49,8 @@ const getPastWordleGuessesGet = asyncHandler(async function(req, res) {
             wordManager.getWordOfTheDay(),
             db.getWordleSessionGuesses(sessionId)
         ]);
-    } catch  {
+    } catch (error) {
+        console.log(error);
         return res.status(500).json({errors: [{msg: "Server error"}]});
     }
 

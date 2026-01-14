@@ -10,7 +10,8 @@ const getWordleSession = asyncHandler(async function(req, res, next) {
 
     try {
         session = await db.getWordleSession(sessionId);
-    } catch {
+    } catch (error) {
+        console.log(error);
         return res.status(500).json({errors: [{msg: "Server error"}]});
     }
 
@@ -18,7 +19,8 @@ const getWordleSession = asyncHandler(async function(req, res, next) {
         try {
           session = await db.createWordleSession();
           sessionId = session.id;  
-        } catch {
+        } catch (error) {
+            console.log(error);
             return res.status(500).json({errors: [{msg: "Server error"}]});
         }
     }
@@ -33,7 +35,13 @@ const getWordleSession = asyncHandler(async function(req, res, next) {
 const deleteOldWordleSessions = asyncHandler(async function(req, res, next) {
     let currentDay = DateTime.local().setZone(process.env.TIMEZONE).startOf("day");
     currentDay = currentDay.toISO();
-    await db.deleteOldWordleGames(currentDay);
+
+    try {
+        await db.deleteOldWordleGames(currentDay);
+    } catch (error) {
+        console.log(error);
+    }
+    
     next();
 });
 
