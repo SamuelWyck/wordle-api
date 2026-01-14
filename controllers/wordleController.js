@@ -16,9 +16,15 @@ const wordGuessGet = asyncHandler(async function(req, res) {
         return res.status(400).json({errors: [{msg: "Out of guesses"}]});
     }
     const word = req.params.word;
-    const validWord = await isValidWord(word);
+    let validWord = null;
+    try {
+        validWord = await isValidWord(word);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({errors: [{msg: "Server error"}]});
+    }
     if (!validWord) {
-        return res.json({msg: "Not a real English word", validWord: false});
+        return res.json({msg: "Word not in list", validWord: false});
     }
 
     const sessionId = req.wordleSession.id;
