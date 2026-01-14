@@ -21,13 +21,11 @@ const wordGuessGet = asyncHandler(async function(req, res) {
         return res.json({msg: "Not a real English word", validWord: false});
     }
 
-    const updatedGuesses = req.wordleSession.remaining_guesses - 1;
     const sessionId = req.wordleSession.id;
-    let score = null;
+    let wordInfo = null;
     try {
-        [score] = await Promise.all([
+        [wordInfo] = await Promise.all([
             wordManager.testGuess(word),
-            db.updateWordleSessionRemainingGuesses(sessionId, updatedGuesses),
             db.insertWordleGuess(sessionId, word)
         ]);
     } catch (error) {
@@ -35,6 +33,15 @@ const wordGuessGet = asyncHandler(async function(req, res) {
         return res.status(500).json({errors: [{msg: "Server error"}]});
     }
 
+    let [score, foundWord] = wordInfo;
+    const updatedGuesses = (foundWord) ? 0 : req.wordleSession.remaining_guesses - 1;
+    try {
+        await db.updateWordleSessionRemainingGuesses(sessionId, updatedGuesses);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({errors: [{msg: "Server error"}]});
+    }
+    
     return res.json({score, validWord: true});
 });
 
