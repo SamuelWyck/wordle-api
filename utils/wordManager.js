@@ -13,7 +13,7 @@ class WordManager {
     
     async testGuess(word) {
         const wordOfTheDay = await this.getWordOfTheDay();
-        return this.scoreWord(word, wordOfTheDay);
+        return [this.scoreWord(word, wordOfTheDay), wordOfTheDay === word];
     };
     
     async getWordOfTheDay() {
