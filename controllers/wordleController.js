@@ -13,12 +13,12 @@ const wordGuessGet = asyncHandler(async function(req, res) {
         return res.status(400).json({errors: errors.array()});
     }
     if (req.wordleSession.remaining_guesses === 0) {
-        return res.status(404).json({errors: [{msg: "Out of guesses"}]});
+        return res.status(400).json({errors: [{msg: "Out of guesses"}]});
     }
     const word = req.params.word;
     const validWord = await isValidWord(word);
     if (!validWord) {
-        return res.status(404).json({errors: [{msg: "Not a real English word"}]});
+        return res.json({msg: "Not a real English word", validWord: false});
     }
 
     const updatedGuesses = req.wordleSession.remaining_guesses - 1;
@@ -35,7 +35,7 @@ const wordGuessGet = asyncHandler(async function(req, res) {
         return res.status(500).json({errors: [{msg: "Server error"}]});
     }
 
-    return res.json({score});
+    return res.json({score, validWord: true});
 });
 
 
