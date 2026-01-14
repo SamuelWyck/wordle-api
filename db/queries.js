@@ -84,6 +84,15 @@ async function deleteOldWordleGames(currentDate) {
     );
 };
 
+async function getWordFromAllWords(word) {
+    const {rows} = await pool.query("SELECT * FROM all_words WHERE word = $1", [word]);
+    let wordInfo = null;
+    if (rows.length !== 0) {
+        wordInfo = rows[0];
+    }
+    return wordInfo;
+};
+
 
 
 module.exports = {
@@ -96,5 +105,6 @@ module.exports = {
     updateWordleSessionRemainingGuesses,
     getWordleSessionGuesses,
     insertWordleGuess,
-    deleteOldWordleGames
+    deleteOldWordleGames,
+    getWordFromAllWords
 };
