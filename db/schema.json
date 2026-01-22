@@ -1,0 +1,72 @@
+{
+    "all_words": {
+        "title": "all_words_collection",
+        "bsonType": "object",
+        "required": ["word"],
+        "properties": {
+            "word": {
+                "bsonType": "string",
+                "minLength": 5,
+                "maxLength": 5,
+                "description": "must be a string of length 5"
+            }
+        }
+    },
+
+    "used_words": {
+        "title": "used_words_collection",
+        "bsonType": "object",
+        "required": ["word", "date_used"],
+        "properties": {
+            "word": {
+                "bsonType": "string",
+                "minLength": 5,
+                "maxLength": 5,
+                "description": "must be a string of length 5"
+            },
+            "date_used": {
+                "bsonType": "date",
+                "description": "timestamp required"
+            }
+        }
+    },
+
+    "wordle_games": {
+        "title": "wordle_games_collection",
+        "bsonType": "object",
+        "required": ["remaining_guesses", "timestamp", "guesses"],
+        "properties": {
+            "remaining_guesses": {
+                "bsonType": "int",
+                "minimum": 0,
+                "maximum": 6,
+                "description": "must be an int in the range 0-6"
+            },
+            "timestamp": {
+                "bsonType": "date",
+                "description": "timestamp required"
+            },
+            "guesses": {
+                "bsonType": "array",
+                "minItems": 0,
+                "maxItems": 6,
+                "items": {
+                    "bsonType": "object",
+                    "required": ["word", "timestamp"],
+                    "properties": {
+                        "word": {
+                            "bsonType": "string",
+                            "minLength": 5,
+                            "maxLength": 5,
+                            "description": "must be a string of length 5"
+                        },
+                        "timestamp": {
+                            "bsonType": "date",
+                            "description":"timestamp required"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
