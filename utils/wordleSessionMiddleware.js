@@ -34,7 +34,7 @@ const getWordleSession = asyncHandler(async function(req, res, next) {
 
 const deleteOldWordleSessions = asyncHandler(async function(req, res, next) {
     let currentDay = DateTime.local().setZone(process.env.TIMEZONE).startOf("day");
-    currentDay = currentDay.toISO();
+    currentDay = currentDay.toUTC().toISO();
 
     try {
         await db.deleteOldWordleGames(currentDay);
